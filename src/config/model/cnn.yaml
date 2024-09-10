@@ -1,0 +1,4 @@
+name: cnn
+_target_: models.CNN
+input_size: ${general.input_size}
+out_channels: 500

@@ -1,0 +1,53 @@
+general:
+  max_epochs: 300
+  lr: 3e-4
+  input_size: 358
+  batch_size: 128
+  test_size: 0.2
+  num_workers: 4
+  weight_decay: 0
+
+  data_dir: data
+  random_state: 42
+  init_tensorboard_server: False
+
+defaults:
+  - _self_
+  - model: mlp
+  - loss: mse
+  - optimizer: adamw
+  - scheduler: plateau
+  - callbacks: default_callbacks
+  - logging: loggers
+  - trainer: default_trainer
+  - override hydra/job_logging: disabled
+
+mlflow:
+  tracking_uri: http://localhost:5000
+  enable_system_metrics_logging: True
+  experiment_name: Networks test
+  run_name: ${model.name} + ${optimizer.name}
+  run_description:
+    batch_size=${general.batch_size}, lr=${general.lr},
+    optimizer=${optimizer.name}, scheduler=${scheduler.name},
+    model=${model.name}, loss=${loss.name}, weight_decay=${general.weight_decay}
+  registered_model_name: ${model.name}
+  run_tags:
+    status: None
+
+hydra:
+  mode: MULTIRUN
+  run:
+    dir: src/logs/hydra/${now:%d.%m.%Y %H-%M-%S}
+  sweep:
+    dir: src/logs/hydra-multiruns/${now:%d.%m.%Y %H-%M-%S}
+    subdir: ${hydra.job.override_dirname}
+  sweeper:
+    params:
+      #general.batch_size: 64, 128
+      #loss: mse, huber
+      optimizer: adamw, rmsprop
+      model: cnn
+      model.out_channels: 1000, 2000
+      #general.weight_decay: 1e-4, 0
+      #scheduler: plateau, exponential

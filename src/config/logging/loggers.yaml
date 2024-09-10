@@ -1,0 +1,17 @@
+#csv_logger:
+#  _target_: lightning.pytorch.loggers.CSVLogger
+#  save_dir: src/logs/csv-logger
+#  name: ${model.name}
+
+tensorboard_logger:
+  _target_: lightning.pytorch.loggers.TensorBoardLogger
+  save_dir: src/logs/tb_logs
+  name: ${model.name}
+  log_graph: True
+#comet_logger:
+#  _target_: lightning.pytorch.loggers.CometLogger
+#  save_dir: ${general.logs_folder_name}
+#  workspace: ${general.workspace}
+#  project_name: ${general.project_name}
+#  api_key: ${private.comet_api}
+#  experiment_name: ${general.run_name}

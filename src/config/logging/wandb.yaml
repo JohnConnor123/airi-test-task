@@ -1,0 +1,9 @@
+log: True
+loggers:
+  - class_name: lightning.pytorch.loggers.WandbLogger
+    params:
+      save_dir: ${general.logs_folder_name}
+      #      workspace: ${general.workspace}
+      project: ${general.project_name}
+      #      api_key: ${private.comet_api}
+      name: ${general.run_name}

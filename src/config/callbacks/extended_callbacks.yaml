@@ -1,0 +1,20 @@
+early_stopping:
+  _target_: lightning.pytorch.callbacks.EarlyStopping
+  monitor: lr
+  stopping_threshold: 5e-6
+  patience: ${general.max_epochs}
+  min_delta: 0 # 0.001
+  verbose: True
+  mode: min
+
+lr_monitor:
+  _target_: lightning.pytorch.callbacks.LearningRateMonitor
+  logging_interval: epoch
+
+rich_pbar:
+  _target_: lightning.pytorch.callbacks.RichProgressBar
+  leave: True
+
+model_summary:
+  _target_: lightning.pytorch.callbacks.ModelSummary
+  max_depth: 1

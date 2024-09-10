@@ -1,0 +1,6 @@
+class_name: torch.optim.lr_scheduler.CyclicLR
+step: step
+monitor: train_${training.metric}
+params:
+  base_lr: ${general.lr}
+  max_lr: 0.1

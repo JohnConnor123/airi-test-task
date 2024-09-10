@@ -1,0 +1,4 @@
+name: adagrad
+_target_: torch.optim.Adagrad
+lr: ${general.lr}
+weight_decay: ${general.weight_decay}

@@ -1,0 +1,5 @@
+name: rnn
+_target_: models.RNN
+input_size: ${general.input_size}
+hidden_dim: 64
+num_layers: 2

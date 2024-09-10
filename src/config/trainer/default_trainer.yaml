@@ -1,0 +1,4 @@
+max_epochs: ${general.max_epochs}
+num_sanity_val_steps: 0
+#accumulate_grad_batches: 1
+#profiler: False

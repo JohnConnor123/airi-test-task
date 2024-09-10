@@ -1,0 +1,4 @@
+class_name: adabound.AdaBound
+params:
+  lr: ${general.lr}
+  final_lr: 0.1

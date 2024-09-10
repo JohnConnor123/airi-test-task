@@ -1,0 +1,3 @@
+name: mlp
+_target_: models.mlp
+input_size: ${general.input_size}

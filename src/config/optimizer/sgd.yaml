@@ -1,0 +1,5 @@
+name: sgd
+_target_: torch.optim.SGD
+lr: ${general.lr}
+momentum: 0.9
+weight_decay: ${general.weight_decay}

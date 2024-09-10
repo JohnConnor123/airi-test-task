@@ -1,0 +1,4 @@
+name: rmsprop
+_target_: torch.optim.RMSprop
+lr: ${general.lr}
+weight_decay: ${general.weight_decay}
