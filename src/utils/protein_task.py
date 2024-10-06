@@ -1,11 +1,14 @@
 import json
 import os
 import pickle
+import sys
 
 import numpy as np
 import pandas as pd
 import torch
 
+
+sys.path.append(".\\src\\utils")
 
 AA_3_TO_1_DICT = {
     "CYS": "C",

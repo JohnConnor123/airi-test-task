@@ -18,16 +18,10 @@ from tensorboard import program
 from torch.utils.data import DataLoader, TensorDataset
 
 from lightning_model import MyLightningModel
-
-
-sys.path[-1] = os.path.join(os.path.dirname(__file__))
 from preprocessing import do_pipeline
 
 
-current_dir = os.getcwd()
-os.chdir(os.path.dirname(os.sep.join(__file__.split(os.sep)[:-1])))
 cfg = OmegaConf.load("src/config/config.yaml")
-os.chdir(current_dir)
 
 warnings.filterwarnings("ignore")
 torch.set_float32_matmul_precision("high")
@@ -47,7 +41,6 @@ def load_obj(cfg: DictConfig, **kwargs: dict) -> Any:
     cfg = OmegaConf.to_container(cfg, resolve=True)
     cfg.pop("name", None)
     cfg = OmegaConf.create(cfg)
-    print(cfg)
     return instantiate(cfg, **kwargs)
 
 
@@ -81,9 +74,9 @@ def get_dataloaders_from_csv_file(cfg, filename):
 def main(cfg: DictConfig) -> None:
     example_input_array = torch.ones((2, cfg.general.input_size))
 
-    # train_dataloader, val_dataloader, test_dataloader = do_pipeline()
-    with open(f"./{cfg.general.data_dir}/secondary/dataloaders/dataloaders.pkl", "rb") as file:
-        train_dataloader, val_dataloader, test_dataloader = pickle.load(file)
+    train_dataloader, val_dataloader, test_dataloader = do_pipeline()
+    # with open(f"./{cfg.general.data_dir}/secondary/dataloaders/dataloaders.pkl", "rb") as file:
+    #    train_dataloader, val_dataloader, test_dataloader = pickle.load(file)
 
     callbacks = [load_obj(callback) for callback in cfg.callbacks.values()]
     loggers = [load_obj(logger) for logger in cfg.logging.values()]
@@ -134,10 +127,15 @@ def main(cfg: DictConfig) -> None:
         mlflow.create_experiment(cfg.mlflow.experiment_name)
 
     mlflow.set_experiment(cfg.mlflow.experiment_name)
-    mlflow.set_experiment_tags(cfg.mlflow.run_tags)
 
     with mlflow.start_run(
-        run_name=cfg.mlflow.run_name, description=cfg.mlflow.run_description
+        run_name=cfg.mlflow.run_name,
+        description=cfg.mlflow.run_description,
+        tags=(
+            OmegaConf.to_container(cfg.mlflow.run_tags, resolve=True)
+            if cfg.mlflow.run_tags
+            else None
+        ),
     ):
         trainer.fit(
             model=model.cuda(),
@@ -166,6 +164,7 @@ def main(cfg: DictConfig) -> None:
         mlflow.log_artifact(hydra_full_path, artifact_path="src/hydra")
 
         cfg = OmegaConf.to_container(cfg, resolve=True)
+
         # cfg["scheduler"].update(scheduler_kwargs[cfg["scheduler"]["name"]])
         mlflow.log_params(cfg)
         mlflow.log_artifact("src/config", artifact_path="src")

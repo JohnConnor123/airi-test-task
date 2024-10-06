@@ -1,5 +1,5 @@
 general:
-  max_epochs: 300
+  max_epochs: 3
   lr: 3e-4
   input_size: 358
   batch_size: 128
@@ -12,7 +12,6 @@ general:
   init_tensorboard_server: False
 
 defaults:
-  - _self_
   - model: mlp
   - loss: mse
   - optimizer: adamw
@@ -25,7 +24,7 @@ defaults:
 mlflow:
   tracking_uri: http://localhost:5000
   enable_system_metrics_logging: True
-  experiment_name: Networks test
+  experiment_name: Default
   run_name: ${model.name} + ${optimizer.name}
   run_description:
     batch_size=${general.batch_size}, lr=${general.lr},
@@ -33,10 +32,11 @@ mlflow:
     model=${model.name}, loss=${loss.name}, weight_decay=${general.weight_decay}
   registered_model_name: ${model.name}
   run_tags:
-    status: None
+    #status: training
+    #framework: pytorch
 
 hydra:
-  mode: MULTIRUN
+  mode: RUN # MULTIRUN
   run:
     dir: src/logs/hydra/${now:%d.%m.%Y %H-%M-%S}
   sweep:
@@ -46,8 +46,8 @@ hydra:
     params:
       #general.batch_size: 64, 128
       #loss: mse, huber
-      optimizer: adamw, rmsprop
-      model: cnn
-      model.out_channels: 1000, 2000
+      #optimizer: adamw, rmsprop
+      model: cnn, mlp, rnn, transformer
+      #model.out_channels: 1000, 2000
       #general.weight_decay: 1e-4, 0
       #scheduler: plateau, exponential

@@ -1,14 +1,9 @@
-import os
-
 import torch
 import torch.nn as nn
 from omegaconf import OmegaConf
 
 
-current_dir = os.getcwd()
-os.chdir(os.path.dirname(os.sep.join(__file__.split(os.sep)[:-2])))
 cfg = OmegaConf.load("src/config/config.yaml")
-os.chdir(current_dir)
 
 
 class CNN(nn.Module):
