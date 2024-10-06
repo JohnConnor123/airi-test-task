@@ -1,6 +1,5 @@
 import os
 import pickle
-import sys
 import warnings
 from pprint import pprint
 
@@ -10,22 +9,12 @@ from omegaconf import OmegaConf
 from optuna.samplers import TPESampler
 from sklearn.metrics import mean_squared_error
 
-
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-sys.path[-1] = os.sep.join(__file__.split(os.sep)[:-2])
-
-current_dir = os.getcwd()
-os.chdir(os.path.dirname(os.sep.join(__file__.split(os.sep)[:-2])))
-
 from preprocessing import prepare_train_data, split_train_data
 from utils import compute_metrics
 
 
-os.chdir(os.path.dirname(os.sep.join(__file__.split(os.sep)[:-2])))
-
+warnings.filterwarnings("ignore", category=FutureWarning)
 cfg = OmegaConf.load("src/config/config.yaml")
-os.chdir(current_dir)
 
 
 class OptunaSearchXGB:

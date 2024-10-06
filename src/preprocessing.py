@@ -1,5 +1,3 @@
-import os
-import sys
 from typing import Tuple
 
 import pandas as pd
@@ -9,15 +7,10 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import trange
 
-
-sys.path[-1] = os.path.join(os.path.dirname(__file__))
 from utils import get_feature_tensor, get_protein_task
 
 
-current_dir = os.getcwd()
-os.chdir(os.path.dirname(os.sep.join(__file__.split(os.sep)[:-1])))
 cfg: DictConfig = OmegaConf.load("src/config/config.yaml")
-os.chdir(current_dir)
 
 
 def prepare_train_data() -> Tuple[torch.Tensor, torch.Tensor]:
@@ -131,7 +124,7 @@ def get_dataloader(dataset: TensorDataset, shuffle: bool = False) -> DataLoader:
         batch_size=cfg.general.batch_size,
         shuffle=shuffle,
         num_workers=cfg.general.num_workers,
-        persistent_workers=True,
+        persistent_workers=True if cfg.general.num_workers > 0 else False,
     )
 
 
